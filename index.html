@@ -1213,48 +1213,33 @@ b. 7983.51
             return qs;
         };
 
-        const parseBank2 = (rawText) => {
-            const qs = [];
-            const blocks = rawText.split(/\n(?=\d+\.\s)/);
-            let index = 0;
-
-            for (let block of blocks) {
-                block = block.replace(/\[Page \d+\]/g, '').trim();
-                if (!block) continue;
-                
-                const lines = block.split('\n');
-                let curQ = { 
-                    id: '', question: '', options: [], 
-                    correct: bank2Answers[index] !== undefined ? bank2Answers[index] : 0, 
-                    ref: '', rationale: '' 
-                };
-                let optMode = false;
-                
-                for (let line of lines) {
-                    line = line.trim();
-                    if(!line) continue;
-                    
-                    if (line.match(/^(\d+)\.\s+/)) {
-                        curQ.id = "PDF-" + line.match(/^(\d+)/)[1];
-                        curQ.question = line.replace(/^\d+\.\s+/, '');
-                    } else if (line.match(/^Reference:\s*/i)) {
-                        curQ.ref = line.replace(/^Reference:\s*/i, '').trim();
-                    } else if (line.match(/^[a-eA-EсС]\.\s/)) { // handle cyrillic 'c' bug in OCR
-                        optMode = true;
-                        curQ.options.push(line.replace(/^[a-eA-EсС]\.\s/, '').trim());
-                    } else {
-                        if (optMode) curQ.options[curQ.options.length - 1] += ' ' + line;
-                        else curQ.question += ' ' + line;
-                    }
-                }
-                if(curQ.options.length > 0) {
-                    curQ.rationale = generateRationale(curQ.ref);
-                    qs.push(curQ);
-                    index++;
+      const parseBank2 = (rawText) => {
+        const qs = [];
+        const blocks = rawText.split(/\n(?=\d+\.\s)/);
+        
+        blocks.forEach((block, index) => {
+            block = block.replace(/\[Page \d+\]/g, '').trim();
+            if (!block) return;
+            
+            const lines = block.split('\n');
+            let curQ = { id: '', question: '', options: [], correct: bank2Answers[index] || 0, ref: '', rationale: '' };
+            
+            for (let line of lines) {
+                line = line.trim();
+                if(!line) continue;
+                if (line.match(/^(\d+)\.\s+/)) {
+                    curQ.id = "PDF-" + line.match(/^(\d+)/)[1];
+                    curQ.question = line.replace(/^\d+\.\s+/, '');
+                } else if (line.match(/^Reference:\s*/i)) {
+                    curQ.ref = line.replace(/^Reference:\s*/i, '').trim();
+                } else if (line.match(/^[a-eA-EсС]\.\s/)) {
+                    curQ.options.push(line.replace(/^[a-eA-EсС]\.\s/, '').trim());
                 }
             }
-            return qs;
-        };
+            if(curQ.options.length > 0) qs.push(curQ);
+        });
+        return qs;
+    };
 
         function App() {
             const [mode, setMode] = useState('MENU'); // MENU, PRACTICE, EXAM, EXAM_RESULTS, SEARCH
