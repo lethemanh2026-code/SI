@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phần mềm Ôn tập VAECO - Store Inspector (Dark Mode)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0f172a; /* Slate 900 */
+            color: #f8fafc; /* Slate 50 */
+        }
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- DỮ LIỆU BANK 1: 72 Câu từ Ngân Hàng SOP -->
+    <script id="bank1-data" type="text/plain">
+1. Who is responsible for providing material and spare part for aircraft maintenance? (AUD; A; B; C; QM; SI; MAP; WS; NDT; INV; MP; CMP; CE; PP; EE)
+a. Customer.
+b. VAECO if specified in maintenance contract between VAECO and customer.
+*c. Customer or VAECO only if specified in maintenance contract between VAECO and customer.
+Ref.: MOE P2 10.4.3 
+2. Material and spare part provided by customer: (AUD; A; B; C; QM; SI; MAP; WS; NDT; INV; MP; CMP; CE; PP; EE)
+a. Can be used without being incoming inspection by VAECO store inspector if they are attached with Certificates of Compliance.
+*b. Must pass the incoming inspection by VAECO store inspector prior to use for maintenance on customer A/C.
+c. Can be used if they are tagged with customer’s serviceable tag.
+Ref.: MOE P3 2.2
+3. Preliminary inspection is (AUD; A; B; C; QM; SI; WS; NDT; INV; PP; CMP; MP; EE)
+*a. Inspection performed prior to maintenance to determine the status and condition of aircrafts/ components.
+b. Inspection performed prior of maintenance on aircraft/ component involved in an occurrence or accident.
+c. Inspection performed during maintenance determine all steps of work are performed correctly.
+Ref.: MOE P3 3.2
+4. Which subject should be preliminary inspected (A; B; C; QM; SI; WS; NDT; INV; PP; CMP; MP; EE)
+a. The A/C only.
+*b. The A/C and A/C documents.
+c. A/C document only.
+Ref.: MOE P3 3.4.1
+5. When CRS staff use measuring and testing equipment, which data must be recorded to maintenance record: (AUD; A; B; C; QM; SI; WS; NDT; INV; PP; EE; MP)
+a. P/N, S/N and GRN of tool and equipment.
+*b. Reference maintenance data; measuring value; P/N and S/N of tool and equipment
+c. P/N, S/N and calibration due date of tool and equipment.
+Ref.: SOP 4.7.5.1
+6. Unserviceable component removed from A/C during base maintenance must be returned to VAECO store (AUD; INV; A; B; C; SI; MAP; ACR; PP; CMP; MP)
+*a. On the day component is removed.
+b. Within 24 hours.
+c. After the A/C is release to service.
+Ref.: SOP 4.9.5.6
+7. Serviceable A/C component removed from A/C for returning to store must be attached with (AUD; INV; A; B; C; SI; MAP; ACR; PP; CMP; MP)
+*a. Re-certified certificate.
+b. Serviceable tag.
+c. Identification tag.
+Ref.: SOP 7.4.5.2
+8. Component have not been used shall be returned to VAECO store with (INV; A; B; C; SI; MAP; ACR; PP; CMP; MP)
+*a. Serviceable tag and the Stock Requisition form for that component.
+b. Re-certified certificate and the requisition form for that component.
+c. Re-certified certificate only.
+Ref.: SOP 4.9.5.1
+9. A required calibration tool without calibration label (AUD; INV; A; B; C; QM; SI; WS; NDT; EE)
+a. can be used if the tool is attached with a serviceable tag.
+*b. can not be used.
+c. can be used with a concession from SQD department.
+Ref.: SOP 9.17.5.1
+10. After engine/APU replacement, what must the respective Maintenance Center do for returning unserviceable engine/APU? (B; SI; MAP; INV; QC Inspector; EE; PP; MP)
+*a. They must perform cover/ packing for engine/ APU, hands over the engine/ APU to LGC and the LGC has to take over the engine/ APU within 48h since completion of Engine/ APU replacement.
+b. They must immediately hand over the engine/ APU to LGC and the LGC has to take over the engine/ APU within 48h since completion of Engine/ APU replacement.
+c. They must return the unserviceable engine/APU to VAECO store not later than 03 hours.
+Ref.: SOP 4.9.5.3
+11. When remove component, the tube/ line ends must be covered by (AUD; INV; A; B; C; ACR; SI; MAP; WS)
+*a. Blanking cap/ plug 
+b. Adhesive tape
+c. Plastic bag and adhesive tape
+Ref.: SOP 4.9.5.6
+12. The INSPECTION TAG (Form VAECO 0014) is attached to the emergency equipment to: (AUD; INV; A; B; C; ACR; SI; MAP; WS; CAB)
+a. indicate the type of work. 
+b. indicate the expiry date only.
+*c. indicate the type of work and the expiry date.
+Ref.: SOP 11.28.5
+13. How to check time limit of emergency equipment installed on A/C? (AUD; INV; A; B; C; ACR; SI; MAP; WS; CAB)
+a. Using list of aircraft component required maintenance (VAECO Form 1001).
+b. Using AMOS and CMM.
+*c. Checking “INSPECTION TAG” Form VAECO 0014 attached to each emergency equipment. 
+Ref.: SOP 11.28
+14. The fabricated parts that are rejected during the inspection because of fail to compliance to the required specifications shall be attached with (AUD; INV; WS; SI)
+a. Unserviceable Tag (VAECO Form 0005)
+*b. Condemned Part Tag (VAECO Form 0009)
+c. Identification tag (VAECO Form 0020)
+Ref.: SOP 4.24.6.5.2, SOP 9.14
+15. Categories of the certifying staffs: (INV; A; B; C; QM; SI; WS; NDT)
+a. Certifying staffs category A, B1, B2, C, Aviation Repair Specialist staffs (ARS), NDT staffs, Part and material incoming inspection staffs.
+*b. Certifying staffs category A, B1, B2, C, Component Certifying Staff and NDT Certifying staff.
+c. Aircraft inspection personnel, Component authorized staff, Specialized inspection personnel, Maintenance sign-off staff.
+Ref.: SOP 10.10.1
+16. The fabricated parts that are rejected during the inspection shall be attached with (ALL)
+*a. Condemned Part Tag
+b. Warning Tag
+c. Unserviceable Tag
+Ref.: SOP 4.24.6.5.2, SOP 9.14
+17. Who is responsible to report mandatory occurrence, malfunction and defects to Air Carrier/ Operator (as required by the contract) and SQD. (ALL)
+*a. MCC Director
+b. The BPD Director
+c. The Engineering Department (EGD) Director
+Ref.: SOP 4.14.3.3
+18. Who is responsible for investigating to find out the root cause of all mandatory occurrence, malfunction and defects; summarizing and reporting to the Authorities, the Manufacturer and the Air carrier/operator. (ALL)
+*a. SQD Director
+b. QC Manager
+c. MCC Director
+Ref.: SOP 4.14.3.4
+19. Who is responsible to notify the suspected unapproved parts to SQD Dept? (AUD; INV; PP; CMP; MP; A; B; C; QM; SI; MAP; WS; NDT)
+*a. Every VAECO employee
+b. Logistic Center employee only
+c. Maintenance staff only
+Ref.: SOP 4.13.3.4
+20. Who is responsible for reporting the Suspected Unapproved Parts (SUP) to the FAA, EASA, CAAV and the customer? (AUD; INV; C; SI)
+a. Director of the Logistics Center
+b. Director of the Engineering Department (EGD)
+*c. Director of the Quality Assurance Department
+Ref.: SOP 4.13.3.2
+21. Who is responsible for investigation of maintenance event/ occurrence and base on that to specify remedial or preventive actions? (INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. SQD Director.
+b. Base Maintenance Centre Director.
+c. Line Maintenance Centre Director.
+Ref.: SOP 10.19.3
+22. Who is responsible for providing clearly, timely information of occurrences to SQD Department, supporting SQD Department for occurrence investigation and performing necessary remedial actions and preventive actions? (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. SAG Team leader of maintenance centers/ departments.
+b. CRS staff only.
+c. All VAECO’ staffs.
+Ref.: SOP 10.19.3
+23. The leader of investigation team (SAG) should issue Investigation report (VAECO Form 2055) and send to SQD Dept: (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. within 24h from the time of occurrence
+b. within 12h from the time of occurrence
+*c. within 48h from the time of occurrence
+Ref.: SOP 10.19.6.1
+24. What is scope of Quality Notice (QN) applied for? (AUD; INV; PP; CMP; MP; EE; A; B; C; QM; SI; MAP; WS; NDT)
+*a. All personnel in maintenance and quality systems of VAECO
+b. All VAECO’ staffs
+c. Certifying staff & Qualified Mechanic.
+Ref.: SOP 10.4.2
+25. QN system is monitored in: (INV; PP; MP; CMP; EE; A; B; C; QM; SI; MAP; WS; NDT)
+*a. VAECO’s website.
+b. SQD department
+c. MCC
+Ref.: SOP 10.4.5.2
+26. Who is responsible for supplier evaluation, approval and control? (AUD; INV; C; SI)
+*a. SQD Director
+b. QC manager
+c. LG Director.
+Ref.: SOP 10.6.3
+27. Maintenance error and violation can be defined as: (A; B; C; ACR; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; MAP; PT; WS; EE)
+*a. A maintenance error is a human action (or human behavior) that unintentionally deviates from the expected action (or behavior) while a violation is a human action (or human behavior) that intentionally deviates from the expected action (or behavior).
+b. A violation is a human action (or human behavior) that unintentionally deviates from the expected action (or behavior) while a maintenance error is a human action (or human behavior) that intentionally deviates from the expected action (or behavior).
+c. A maintenance error is a human action (or human behavior) that intentionally deviates from the expected action (or behavior) while a violation is a human action (or human behavior) that unintentionally deviates from the expected action (or behavior).
+Ref.: SOP 10.18.5.1
+28. Disciplinary action (punishment) of a staff after he/she committed an error/violation are an exception unless: (A; B; C; ACR; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; MAP; PT; WS; EE)
+a. Premeditated or intentional acts of damage to equipment or property.
+b. Failure to report incidents/accidents as required.
+*c. All of these answers are correct.
+ Ref.: SOP 10.18.5.2
+29. Categories of authorized staff include (A; B; C; ACR; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; Pawinting; WS):
+a. Category A, B1, B2 and C 
+b. Category A, B1, B2, C, Component and NDT 
+*c. Certifying staff, Qualified Mechanics, Inspection personnel
+Ref.: SOP 10.10.1
+30. What means of the maintenance error? (A; B; C; ACR; AUD; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; MAP; PT; WS; EE)
+*a. A human action (or human behavior) that unintentionally deviates from the expected action (or behavior).
+b. A human action (or human behavior) that intentionally deviates from the expected action (or behavior).
+c. A human action (or human behavior) could result in a failure, malfunction, or defect which would endanger the continued safe flight and landing of the aircraft.
+Ref.: SOP 10.18.5.1
+31. What means of the violation? (A; B; C; ACR; AUD; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; MAP; PT; WS; EE)
+a. A human action (or human behavior) that unintentionally deviates from the expected action (or behavior).
+*b. A human action (or human behavior) that intentionally deviates from the expected action (or behavior).
+c. A human action (or human behavior) could result in a failure, malfunction, or defect which would endanger the continued safe flight and landing of the aircraft.
+Ref.: SOP 10.18.5.1
+32. What mean of the Routine Violation? (A; B; C; ACR; AUD; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; MAP; PT; WS; EE)
+a. A human action (or human behavior) that unintentionally deviates from the expected action (or behavior).
+b. A human action (or human behavior) could result in a failure, malfunction, or defect which would endanger the continued safe flight and landing of the aircraft.
+*c. These are “common practice”. Often occur with such regularity that they are automatic. Violating this rule has become a group norm. Routine violations are condoned by management.
+Ref.: SOP 10.18.5.1
+33. What mean of the Exceptional Violation? (A; B; C; ACR; AUD; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; MAP; PT; WS; EE)
+a. A human action (or human behavior) that unintentionally deviates from the expected action (or behavior).
+*b. Maintenance Personnel wilfully breaks standing rules while disregarding the consequences
+c. These are “common practice”. Often occur witwh such regularity that they are automatic. Violating this rule has become a group norm.
+Ref.: SOP 10.18.5.1
+34. Which type of re-certifying certificate to be issued to declare the serviceability of removed components / parts from the aircraft/ aircraft component? (A; B; C; QC Inspector; INV; PP; MP; CMP; ACR; WS; SI; MAP; PT; STR; WD; CAB; IFE)
+a. VAECO Form 5001;
+b. CAAV Form 1;
+*c. The type of certificate specified in the WO based on customer demands (official letter, telex, service order) if requested by customer or based on the actual condition as follows: VAECO Form 5001, CAAV Form 1, FAA 8130-3.
+Ref. SOP 10.10
+35. To avoid the effects of humidity, temperature, contamination and damage, part and material will be: (AUD; INV; A; B; C; QM; SI; WS; NDT)
+a. Kept in normal condition.
+*b. Preserved in accordance with the manufacturer’s requirements or applicable industrial standards.
+c. Preserved in store without any specific requirement.
+Ref.: MOE P2 C 9.3.1.3 or RSM P2 C 9.3.1.3 or EASA MOE P2 2.3.1.1 (5)
+36. To assure safety and security, part and material will be: (INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. Accessed by any personnel.
+b. Kept in quarantine store.
+*c. Secured to prevent unauthorized access
+Ref.: MOE P2 C 9.3.1.4 or RSM P2 C9 9.3.1.4
+37. Which software system is used to control part and material provided by Vietnam Airlines? (INV; PP; CMP; MP; A; B; C; QM; SI; MAP; WS; NDT; TOC)
+*a. Aircraft Maintenance and Operational Support (AMOS).
+b. Other software system than AMOS. 
+c. All of these answers are correct.
+Ref.: MOE Phần 2 Chương 9.3.2.1 or RSM P2 C 9.3.2.1
+38. Which statement is true? (INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. Serviceable part and material always must be separated with unserviceable part and material.
+b. Serviceable part and material can be kept in the same place with unserviceable part and material provided they are attached with identifying tag.
+c. Serviceable part and material can be kept in the same place with unserviceable part and material. 
+Ref.: MOE P2 C 9.3.1.2 or RSM P2 C 9.3.1.2 or EASA MOE P2 2.3.1.1 (1)
+39. Which tag is used to identify serviceable status of rotable part (INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. Consumable Release Tag (VAECO Form 0008)
+*b. Serviceable Tag for Rotable Parts (VAECO Form 0005/Left hand section) 
+c. Unserviceable Tag for Rotable Part (VAECO Form 0005/Right hand section)
+MOE P2 C 9.3.3.1 or RSM P2 C 9.3.3.1 or EASA MOE P2 2.3.2 (1)
+40. When dispatch individual item from a batch of consumable part/ materials which tag shall be attached with individual item. (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. Consumable Release Tag (VAECO Form 0008)
+b. Serviceable Tag for Expendable/Consumable (VAECO Form 0007).
+c. Identification Tag (VAECO Form 0003).
+Ref.: MOE P2 C 9.3.3.4 or RSM P2 C 9.3.3.4 or EASA MOE P2 2.3.2 (2) 
+41. Which requirement specified in ATA-300: (INV; SI)
+*a. Standard of packaging of part/ material.
+b. Requirement of preservation of part/ material.
+c. Requirement of storage condition. 
+Ref.: MOE P3 C 2.5.7.c or QCM P3 C2.5.7.c or EASA MOE P2 2.2.3.1 (2f)
+42. The expiry date of part/ material shall be defined based on: (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. Information in the AMOS only.
+b. Information from part/ material supplier.
+*c. Information in the certificate/ document/ label from Manufacturer
+Ref.: MOE P2 C 9.3.5.1 or RSM P2 C 9.3.5.1 or EASA MOE P2 2.3.1.2 (1)
+43. When delivering part/ material, what rule will be applied? (INV; SI)
+*a. The First In First Out (FIFO) rule
+b. The First in Last out (FILO) rule.
+c. No specific rule for this case.
+Ref.: MOE P2 C 9.3.6.5 or RSM P2 C 9.3.6.5
+44. When delivering part/ materials (INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. The deliverer (store personnel) will inspect the status and related documents for the item prior to delivery to assure serviceable items are made available.
+b. The receiver (maintenance personnel) will inspect status of the item and related documents for serviceability and sign in the spare request sheet or delivery/receiver book, acknowledging the receipt of a serviceable item.
+*c. All of these answers are correct.
+Ref.: MOE P2 C 9.3.6.6 or RSM P2 C 9.3.6.6 or EASA MOE P2 2.2.3 and 2.3.3
+45. Who will make decision and attach a tag to condemned part (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. Store inspector. 
+b. Aircraft certifying staff.
+c. A/C Inspection personnel.
+Ref.: SOP 9.14.6.1.b or EASA MOE P2 2.3.2
+46. When returning to store, materials (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. Will be accepted if materials are still in original packing and good condition.
+b. Will be accepted in all cases.
+c. Will be discarded.  
+Ref.: SOP 9.7.6.7.1.a
+47. Inspector find expired date of shelf-life part during incoming inspection base on what? (INV; SI)
+*a. On the certificate/label of shelf-life parts;
+b. Expired date of shelf-life parts is defined base on condition of preservation of VAECO store.
+c. Base on type of shelf-life parts that is defined in AMOS only;
+d. All these answers are correct
+MOE P2 C9.3.5.1; RSM&QCM P2 C9.3.5.1 or EASA MOE P2 2.3.1.2 (1)
+48. Single serviceable component can be ‘Robbed’ from (B; C; QM; SI; MAP; WS; MP; INV)
+a. stocked serviceable Next Higher Assembly.
+b. stocked Un-serviceable Next Higher Assembly.
+*c. All of these mentioned cases are correct.
+Ref.: SOP 9.12.5.1.1
+49. To “Rob” an item from serviceable NHA kept in store, authorised staff have to (INV; B; C; SI; MAP; WS)
+*a. check then issue re-certified certificate for the robbing item.
+b. issue a serviceable tag for the robbing item.
+c. Issue Robbery tag for “robbed” NHA and robbing item.
+Ref.: SOP 9.12.5.2.1
+50. To “Rob” an item from Un-serviceable NHA kept in store, authorised staff have to (INV; B; C; SI; MAP; WS)
+*a. check relevant documents to ensure that current defect on NHA do not impact to the serviceable status of the robbing item.
+b. issue a serviceable tag for the removed robbing item.
+c. Issue Robbery tag for “robbed” NHA and removed robbing item.
+Ref.: SOP 9.12.5.3.1
+51. Which category of part does VAECO fabricate? (INV; A; B; C; QM; SI; MAP; WS; NDT; EE)
+a. No, VAECO is approved maintenance organization not production/ designed organization;
+*b. Category 3 parts
+c. Category 2 parts in accordance with FAA Advisory Circular
+Ref.: SOP 4.24.2 or RSM &QCM P2 C 9.4
+52. Unserviceable part removed from an aircraft to be returned to VAECO Store must be attached with the following document: (INV; A; B; C; QM; SI; MAP; WS)
+*a. Unserviceable tag; Technical-log page or NRC; applicable trouble shooting data such as: PFR/ OMM, Bite test.
+b. Unserviceable tag; Technical-log page or NRC.
+c. Technical-log page or NRC; applicable trouble shooting data such as: PFR/ OMM, Bite test.
+Ref.: SOP 4.9.5.3 (4) or EASA MOE P2 2.19.3 (1)
+53. Materials have reached or exceeded their certified shelf-life limits: (AUD; INV; A; B; C; QM; SI; MAP; WS; NDT; EE)
+*a. must be tagged with Condemned Part Tag (VAECO Form 0009) by Store Inspector and transferred to Condemn Store.
+b. must be transferred to another store in order to obtain the new self-life.
+c. could be used if the material is still in good condition.
+Ref.: SOP 9.14.6 (1b) or EASA MOE P2 2.3.2 (9a)
+54. The receiving control number (GRN) is: (INV; A; B; C; QM; SI; MAP; WS; NDT)
+*a. used to control original certificates, documents of part/ materials;
+b. issued by the manufacturer for controlling of part/ material;
+c. the approval number for supplier who provide the part/ material for VAECO.
+Ref.: SOP 9.7.6.3.8.b or EASA MOE P2 2.2.3.1 (7)
+55. Which document is used to confirm serviceable status of component removed from A/C? (INV; A; B; C; QM; SI; MAP; WS)
+a. Identification tag.
+b. Serviceable tag.
+*c. Re-certified certificate.
+Ref.: SOP 4.12.1
+56. When receive from VAECO main store, GRN and information of consumable material should be found base on (INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. Serviceable tag (VAECO Form 0005).
+*b. Consumable release Tag (VAECO Form 0008) or Serviceable Tag for Expendable/Consumable Item (VAECO Form 0007)
+c. Container of package of consumable spare part. 
+Ref.: Form Manual
+57. Which requirement must be met during preservation of Electrostatic Discharge Sensitive (ESDS) parts? (INV; A; B; C; QM; SI; MAP; WS; EE)
+a. To be stored in containers completely insulated from metal objects;
+b. Be preserved in containers ATA-300;
+*c. All of these answers are correct.  
+Ref.: SOP 9.8.5.3.8.b or EASA MOE P2 2.3.1.3 (a)
+58. After removing from aircraft during maintenance an aircraft parts shall be identified by using: (INV; A; B; C; QM; SI; MAP; WS; NDT)
+a. Serviceable tag – left hand part (VAECO form 0005).
+*b. Identification tag (VAECO form 0003).
+c. Un-serviceable tag – right hand part (VAECO form 0005).
+Ref.: SOP 4.8.5.2 (2); RSM &QCM P2 C 10.4.4 (7); MOE P2 C 9.3.3 (6); 10.4.4 (8); EASA MOE 2.3.2 (6)
+59. For acceptance the tool and equipment of customer, what form must the MSC/ DAD Branch staff shall create and attach to? (SI; INV; QC Inspector)
+a. Calibration Control label (VAECO Form 0004) to show that it is only used for the respective customer.
+*b. Usage Notice (VAECO Form 0016) to show that it is only used for the respective customer.
+c. Caution label (VAECO Form 0019) to show that it is only used for the respective customer.
+Ref.: SOP 9.16.6.3
+60. While receiving of part/ materials for maintenance, who is responsible to verify the correction of part/materials in comparison with the part/ materials requisition; checks physical condition of part/ materials? (A; B; C; QC Inspector; INV; ACR; WS; BSI; NDT; SI; MAP; PT; STR; WD; CAB; IFE)
+a. Part/ Material requester.
+*b. Part/ Material receiver.
+c. Part/ Material issuer.
+Ref.: SOP 9.10.5
+61. Receiving personnel takes pictures of the external condition of part – This is requirement for (C; QC Inspector; INV; SI)
+a. Receiving un-used part.
+b. Receiving new part.
+*c. Receiving unserviceable part.
+Ref.: SOP 9.13.5
+62. Who perform the preliminary inspection of T&E: (AUD; INV; C; QM; SI; NDT)
+a. Tool Controller;
+*b. Store inspector;
+c. Staff of tool store.
+Ref.: SOP 9.15.5.1.1.2
+63. Who is responsible for performing detail inspection of physical condition, specification and technical status, included specific manufacturer's requirements such as storage condition, maintenance requirement: (INV; C; QM; SI; NDT)
+*a. Tool Controller;
+b. Store inspector;
+c. Staff of tool store
+Ref.: SOP 9.15.5.1.2.1
+64. Who is responsible for checking and accepting the T&E handovered from LGC: (INV; A; B; C; QM; SI; WS; NDT)
+*a. The respective MSC Directors or DAD Branch Director
+b. The respective MSC Directors
+c. The respective MSC Directors or Ramp Maintenance Directors
+Ref.: SOP 9.16.3
+65. Self-equipped tools/ equipment used in maintenance by maintenance staff are: (AUD; INV; A; B; C; QM; SI; WS; NDT)
+a. Hand tools only
+b. Non-specific tool/ equipment and must be accepted by his manager
+*c. Forbidden 
+Ref.: SOP 9.16.4.3
+66. Specific and non-specific T&E to be shared shall be preserved IAW: (AUD; INV; A; B; C; QM; SI; WS; NDT)
+*a. Manufacturer’s requirements/ recommendation
+b. Industrial standards
+c. National standards
+Ref.: SOP 9.16.5.1.1
+67. What agencies are acceptable/ recognized for calibrating the VAECO Calibration Required Tool and Equipment (CRTE)? (INV; SI)
+*a. Agencies listed on List of Recognized Tool Subcontractors (VAECO Form 2062)
+b. OEM of CRTE
+c. VAECO Calibration workshop
+Ref.: SOP 9.17.4.3
+68. The use of a measurement tool/equipment is only allowed when: (A; B; C; ACR; INV; QC Inspector; IFE; CAB; STR; WD; NDT; BSI; SI; PT; WS; EE)
+*a. They have the “Calibration not required” (VAECO Form 0018) stamp or Calibration Control Label (VAECO Form 0004) or Calibration Stamp (VAECO Form 0021 attached.
+b. They have the “Serviceable tag” (VAECO Form 0005) attached that confirms their serviceability.
+c. They have the “Usage notice” (VAECO Form 0016) attached that declares their accuracy.
+Ref.: MOE P2C8
+69. Based on the supply responsibilities stated in the contract with each customer, who evaluates part request assessment? (MAP; SI)
+a. Store Inspector
+*b. Material planner
+c. Store keeper
+Ref.: General MOE
+70. All Part Requests from MCC, Maintenance center, Internal Shop… will be compiled and displayed at? (MAP, SI)
+a. APN 203
+*b. APN 204
+c. APN 202
+Ref.: AMOS SOP
+71. What is the requirement below for returning unserviceable part removed from aircraft in base maintenance? (A; B; C; INV; PP; MP; QC Inspector)
+a. Unserviceable part removed from aircraft must be returned to VAECO store at the end of the shift.
+*b. Unserviceable part removed from aircraft must be returned to VAECO store during the day of removal.
+c. Unserviceable part removed from aircraft must be returned to VAECO store not later than 03 hours.
+Ref.: SOP 4.9.5.6
+72. Who is responsible to provide maintenance data, used for implementing maintenance on customer’s aircraft, to VAECO: (A; B; C; R; WS; NDT/BSI; INV; MP; EE; CMP; CE; PP)
+*a. Customer.
+b. VAECO itself.
+c. Manufacture.
+Ref.: MOE P3 11.4.3
+    </script>
+
+    <!-- DỮ LIỆU BANK 2: 150 Câu từ PDF -->
+    <script id="bank2-data" type="text/plain">
+1. Who tags the Condemned Part Tag (VAECO Form 0009)?
+Reference: SOP 9.14.5.1 (Disposition of Condemned Part)
+a. Storekeeper
+b. Store Inspector
+c. SQD
+2. Who can access the Condemn Store?
+Reference: SOP 9.14.6 (Disposition of Condemned Part)
+a. Store Inspector
+b. Authorized personnel of LGC
+c. Only authorized personnel of LGC and SQD
+3. Can condemned parts be used?
+Reference: SOP 9.14.6 (Disposition of Condemned Part)
+a. Absolutely no
+b. For AOG
+c. For legitimate non-flight uses
+4. What is "pre-preg" material?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Chemical part (flammable, corrosive, explosive)
+b. Raw material (metal, rubber...)
+c. A composite material made from pre-impregnated fibers and a partially cured polymer matrix
+5. What should you do when receiving "pre-preg" material?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Open the seal and wait for the material to reach room temperature
+b. Check refrigeration conditions (temperature limitations during shipping and storage)
+c. Send to quarantine
+6. Who performs finish component inspection for removal parts?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Store Inspector
+b. Tool Controller
+c. Storekeeper
+7. Which APN can be used to find certificates?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Certificate Management APN 2740 and Part Tracking APN 188
+b. Receiving Tracking APN 1498 and Part Tracking APN 188
+c. Certificate Management APN 2740 and Receiving Tracking APN 1498
+8. What is the difference when inspecting consumables and rotables on the AMOS system?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Rotables require finish component inspection
+b. Consumables require finish component inspection
+c. The process is the same for both
+9. Which APN is used to update rotables' tree components?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Goods Receiving APN 2121; Rotables Administrator APN 147
+b. Component Inspection & Records APN 2293
+c. Receiving Tracking APN 1498
+10. Which APN is used to remove or install tree components?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Goods Receiving APN 2121
+b. Order Management APN 2015
+c. Component Tree Label Booking APN 184
+11. Which APN can send a rotable/repairable consumable for repair?
+Reference: SOP 9.13.5.3 (Receiving and Sending Unserviceable Part)
+a. Stock Information APN 221; Goods Receiving APN 2121
+b. Goods Receiving APN 2121; Component Inspection & Records APN 2293
+c. Stock Information APN 221; Component Inspection & Records APN 2293
+12. Can a rotable without finished component inspection be issued for an aircraft?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Yes
+b. No
+c. Yes, but it cannot be installed on the aircraft
+13. Which location can be issued for an aircraft?
+Reference: SOP 9.8.5.2 (Tagging, Arrangement, Preserving)
+a. Standard and Inaccessible
+b. Restricted and Inaccessible
+c. Standard and Restricted
+14. Which department issues ESDS equipment inspection documents?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Technical Department
+b. MCC
+c. QA Department
+15. What is an electrostatic mat?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. An insulating mat
+b. A conductive mat
+c. A type of carpet with anti-static function
+16. How many layers does an anti-static mat have?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 1
+b. 2
+c. 3
+17. What is the function of the first layer of an electrostatic mat?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Eliminates static electricity and disperses charge on the surface
+b. Conducts electricity
+c. Provides insulation
+18. What is the function of the second layer of an electrostatic mat?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Eliminates static electricity
+b. Conducts electricity
+c. Provides insulation
+19. What tool is used to test an electrostatic mat?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 3M-746
+b. 3M-769
+c. 3M-701
+20. What tool is used to test a wrist strap?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 3M-746
+b. SCR-01
+c. 3M-701
+21. How often should an electrostatic mat be checked?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Daily
+b. Weekly
+c. Monthly
+22. How often should a wrist strap be checked?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Daily
+b. Weekly
+c. Monthly
+23. What must a Store Inspector test before checking an electrostatic mat?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Battery of the tool
+b. Continuity
+c. Both battery and continuity
+24. What must a Store Inspector test before checking a wrist strap?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Battery of the tool
+b. Continuity
+c. Both battery and continuity
+25. What is the acceptable resistance range for an ESDS surface mat test?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 1x10^4 Ohms to 1x10^7 Ohms
+b. 1x10^5 Ohms to 1x10^8 Ohms
+c. 1x10^6 Ohms to 1x10^9 Ohms
+26. How many points need to be checked when testing an electrostatic surface?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 4
+b. 5
+c. 6
+27. In a point-to-point test, what is the distance between points?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 1.0.3 ± 0.01m
+b. 0.4 + 0.01m
+c. 0.5 ± 0.01m
+28. Where can ESDS items be checked?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Inspection table for common spare parts
+b. Inspection table for common spare parts (without contact)
+c. ESDS table only
+29. Must a Store Inspector wear a wrist strap when inspecting ESDS items?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Not needed if the mat is checked
+b. Yes, must wear
+c. Not needed if not contacting the unit directly
+30. Can a Store Inspector directly contact ESDS items during inspection?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. No, it could damage the unit
+b. Yes, but must follow ESDS procedures
+c. Yes, without restrictions
+31. Must an ESDS label be attached outside the box after inspection?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Not needed if preserved in an ATA300 box
+b. Not needed if preserved in an ESDS bag and ATA300 box
+c. Yes, for warning purposes
+32. How should electrostatic units be preserved?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Must use ESDS shelves
+b. Can be stored with common spare parts
+c. Must be kept in ESDS bag and ATA300 box with an ESDS label
+33. How is an ESDS part warned?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. On certificates and documents
+b. On the unit with an attached label
+c. Both certificates and labels
+34. Which center provides areas for temporary removal components or large components?
+Reference: SOP 9.7.6.1 (Initial Classification and Assigning Receiving Area)
+a. MCs
+b. LGC
+c. MSC
+35. Can unpacked rivets be returned to the store?
+Reference: SOP 9.7.6.7 (Incoming Inspection for Returned Serviceable Parts)
+a. Not given
+b. No
+c. Yes, if brand-new
+36. What is the next step after a part passes incoming inspection?
+Reference: SOP 9.8.5.1 (1-2)
+A. Store without a tag
+B. Return the part to supplier
+C. Tag the part and attach supporting documents if applicable
+37. Which center monitors off-wing Engine/APU preservation status?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. MCC
+b. EGD
+c. LGC
+38. How many days in advance does LGC inform MCC before the next preservation date?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 30 days
+b. 60 days
+c. 20 days
+39. Which tag is used for identifying serviceable consumable parts?
+Reference: SOP 9.8.5.1(1b)
+A. VAECO Form 0005
+B. VAECO Form 0007
+C. VAECO Form 0008
+40. How should ESDS (Electrostatic Discharge Sensitive) parts be stored?
+Reference: SOP 9.8.5.3(8b)
+A. Wrapped in plastic and stored near metal parts
+B. Stored in insulated containers away from metal objects
+C. Placed on high racks to avoid dust
+41. Who checks and accepts T&E handed over from LGC?
+Reference: SOP 9.15.5.1 (Acceptance of T&E at MSC/DAD Branch)
+a. Tool Controller
+b. Tool Keeper
+c. Store Inspector
+42. Who performs the preliminary inspection of T&E?
+Reference: SOP 9.15.5.1 (Acceptance of T&E at MSC/DAD Branch)
+a. Tool Controller
+b. Store Inspector
+c. Tool Keeper
+43. Which system is used to monitor the shelf life of parts?
+Reference: SOP 9.9.5.1(2)
+A. AMOS
+B. ERP
+C. PowerBI
+44. How do you update HT/LL parts?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Based on the Airworthiness Certificate
+b. Calculate and adjust dates in AMOS
+c. Ensure the next due date matches the Airworthiness Certificate and AMOS.
+45. How should customer-owned parts be managed after inspection?
+Reference: SOP 9.8.5.1(6)
+A. Retag with VAECO serviceable tags
+B. Discard if not certified by VNA
+C. Keep original tags and store in a dedicated area
+46. How long does a Store Inspector wait before reporting unresolved discrepancies to the Logistics Director?
+Reference: SOP 9.7.6.11 (Discrepancy Reporting)
+a. 4 weeks
+b. 6 weeks
+c. 8 weeks
+47. How soon must incoming inspected Engine/APU be transferred to storage?
+Reference: SOP 9.7.6.1 (Initial Classification and Assigning Receiving Area)
+a. Within 48 hours
+b. Within 72 hours
+c. Within 96 hours
+48. How many types of providers supply materials to VAECO?
+Reference: SOP 9.7.5 (General Requirements for Certificates)
+a. 1 (Supplier)
+b. 2 (Supplier, Subcontractor)
+c. 3 (Supplier, Contractor, Subcontractor)
+49. What temperature is required to ship pre-preg materials?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Normal temperature
+b. High temperature
+c. Low temperature
+50. Who performs the "RELEASE TO SERVICE" step for recertified components?
+Reference: SOP 4.12 (Recertification of Components)
+a. Technical Support Staff
+b. Store Keeper
+c. Authorized Staff
+51. What type of bag is used to wrap ESDS parts?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Plastic bag
+b. Paper bag
+c. Anti-static bag
+52. Can components robbed from aircraft with a Re-certified Certificate be installed on an EU-registered aircraft?
+Reference: SOP 9.12.5.2 (Robbery of an Item from Serviceable Assembly)
+a. Yes
+b. No
+c. Only with CAAV Form 1
+53. Which type of tires are permitted on NEO aircraft?
+Reference: Airbus Dossier No. 81064882
+a. Only bias tires
+b. Only radial tires
+c. Both bias and radial tires
+54. What must Store Inspectors record on Serviceable Tag Form 0005 and Inspection Tag Form 0014 for oxygen cylinders?
+Reference: QN-2021-03
+a. "SHELF LIFE" to Form 0014 and "LIFE LIMIT" to Form 0005
+b. "SHELF LIFE" to Form 0005 and "LIFE LIMIT" to Form 0014
+c. "SHELF LIFE" to both forms
+55. How often must temperature and humidity be recorded in preservation stores?
+Reference: SOP 9.8.5.3(3)
+A. Once a day
+B. Twice a day
+C. Once a week
+56. What must SI and authorized staff do after completing incoming inspection of an engine?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Control robbery of parts on the stored engine
+b. Perform inventory of parts using VAECO Form 3043
+c. Request MCC to issue WO for inventory parts
+57. Are electronic certificates accepted by VAECO?
+Reference: SOP 9.7.5.4 (Format of Accepted Certificates)
+a. Yes
+b. Not yet accepted
+c. Only FAA and EASA certificates
+58. Which VAECO form is filled if abnormal damage is found when receiving an unserviceable part?
+Reference: SOP 9.13.5.2 (Receiving and Handling Unserviceable Part)
+a. VAECO Form 4004 (Discrepancy Report)
+b. VAECO Form 2013 (Safety/Error Report)
+c. VAECO Form 2029 (Non-Conformity Report)
+59. What must a Store Inspector require if customer parts are shipped directly from a distributor?
+Reference: SOP 9.7.6.5 (Receiving Inspection of Customer's Parts)
+a. List of supplier/distributor approved by the customer
+b. List of supplier/distributor approved by VAECO
+c. List of supplier/distributor approved by VNA
+60. Who should a Store Inspector contact if a Discrepancy Report is unresolved after 4 weeks?
+Reference: SOP 9.7.6.11 (Discrepancy Reporting)
+a. Supply Squad
+b. Logistics Director
+c. SQD
+61. How soon must U/S components removed during base maintenance be returned to the store?
+Reference: SOP 9.13.5.2 (Receiving and Handling Unserviceable Part)
+a. On the day of removal
+b. Within 24 hours
+c. After aircraft release to service
+62. What must Maintenance Centers do after engine/APU replacement?
+Reference: SOP 9.13.5.2 (Receiving and Handling Unserviceable Part)
+a. Perform cover/packing and hand over to LGC within 48 hours
+b. Immediately hand over to LGC within 48 hours
+c. Return to VAECO store within 3 hours
+63. Who investigates mandatory occurrences and reports to Authorities?
+Reference: SOP 9.7.6.11 (Discrepancy Reporting)
+a. QC Manager
+b. QA Director
+c. MCC Director
+64. Which form is attached with Serviceable Tag (Form 0005) after incoming inspection of engine/APU?
+Reference: SOP 9.8.5.1 (Tagging)
+a. VAECO Form 0025
+b. VAECO Form 0025 and Form 3043
+c. VAECO Form 3043
+65. Can a PMA critical part be installed on an aircraft under VNA policy?
+Reference: SOP 9.7.5.3 (Certificates Accepted by VAECO for EASA)
+a. No, VNA only accepts non-critical PMA parts
+b. Yes, if accompanied by FAA 8130-3
+c. Yes, if listed in maintenance data (AIPC, CMM)
+66. Which re-certified certificate is issued for K6's customer-owned items?
+Reference: SOP 9.7.5.1 (Certificates Accepted by VAECO for CAAV)
+a. CAAV Form 1
+b. VAECO Form 5001
+c. SSCA Form 1
+67. What defines the storage time of an aircraft component?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. AMM
+b. CMM
+c. IPC
+68. How long is VAECO Form 3043 kept at LGC?
+Reference: SOP 9.7.7 (Archives)
+a. 3 years
+b. 2 years
+c. 4 years
+69. Can a Store Inspector generate a new part with a Re-certified Certificate?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Not allowed
+b. Allowed
+c. Allowed if CRS/MCC provides maintenance data
+70. Who receives parts/materials for VNA at outstation?
+Reference: SOP 9.7.6.6 (Receiving of Parts at Outstation)
+a. LGC
+b. VNA representative
+c. Ramp MCs
+71. What additional information must Store Inspectors check on A350 oxygen cylinders?
+Reference: QN 2024-20
+a. Color of the cylinder
+b. Number of protective caps
+c. Number of masks
+72. How is a PBE with a missing/broken tamper seal classified?
+Reference: QN 2024-09
+a. Unserviceable, sent for repair
+b. Serviceable, ignore the error
+c. Serviceable, raise ADD type C if no spare seal
+73. What does the "-" in "49x18-22" on an aircraft tire indicate?
+Reference: Manufacturer's Documentation
+a. Radial type
+b. Bias type
+c. Internal construction
+74. Does VAECO accept parts from a supplier approved by its customers?
+Reference: SOP 9.7.6.5 (Receiving Inspection of Customer's Parts)
+a. No, only SQD-approved suppliers
+b. Yes, if the customer accepts
+c. Depends on the aircraft's maintenance purpose
+75. Who tags Inspection Tag (VAECO Form 0014) for emergency equipment installed on aircraft?
+Reference: SOP 9.8.5.1 (Tagging)
+a. Store Inspector
+b. Administration Department
+c. Maintenance Center staff
+76. Who requests MCC to issue WO for inventory parts on an engine?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. VNA Technical Department
+b. LGC
+c. EGD
+77. Who tags Inspection Tag for emergency equipment when supplementing medicine in First Aid Kit?
+Reference: SOP 9.8.5.1 (Tagging)
+a. Administration Department
+b. Cabin Interior Maintenance Branch
+c. Logistics Center
+78. Which engines are kept with VAECO Form 3043?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. Only serviceable engines
+b. Only unserviceable engines
+c. Both serviceable and unserviceable engines
+79. How are multiple maintenance time limits shown on an Inspection Tag?
+Reference: SOP 9.8.5.1 (Tagging)
+a. One tag for each limit
+b. Shortest limit shown
+c. Longest limit shown
+80. How does maintenance time limit compare to shelf life in storage?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. Shorter than or equal to shelf life
+b. Longer than or equal to shelf life
+c. Always equal to shelf life
+81. Who issues the list of aircraft components requiring maintenance (VAECO Form 1001)?
+Reference: SOP 9.9.5.2 (Control of Aircraft Parts Requiring Maintenance)
+a. Maintenance Control Center
+b. VNA Technical Department
+c. Engineering Department
+82. What is the minimum capacity level for Ni-Cd Batteries during short-term storage?
+Reference: Manufacturer's Specifications (PN 505CH2, 2758)
+a. 90%
+b. 80%
+c. 70%
+83. What is the maximum distance from hazardous chemical area to eyewash equipment?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. 5m
+b. 10m
+c. 15m
+84. How are chemical stores divided?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Explosive flammable, corrosive, toxic
+b. Explosive flammable, radioactive, infectious
+c. Corrosive, infectious, radioactive
+85. Who defines material allocation parameters in AMOS (APN 2629)?
+Reference: SOP 9.11.5.3 (Reorder Level Monitoring)
+a. LGC
+b. EGD
+c. SQD
+86. What form is attached when robbing an item from a serviceable assembly?
+Reference: SOP 9.12.5.2 (Robbery of an Item from Serviceable Assembly)
+a. VAECO Form 4008 (Missing Part List)
+b. VAECO Form 3043 (Inventory List)
+c. VAECO Form 3043 (Engine) or Form 4008 (Other Parts)
+87. What form is filled if abnormal damage is found when receiving an unserviceable part?
+Reference: SOP 9.13.5.2 (Receiving and Handling Unserviceable Part)
+a. VAECO Form 4004 (Discrepancy Report)
+b. VAECO Form 2013 (Safety/Error Report)
+c. VAECO Form 2029 (Non-Conformity Report)
+88. Can corrosive chemicals be stored near flammable liquids?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. No, must be 3m apart
+b. Yes
+c. No, must be 6m apart
+89. Who establishes Engine Inventory List (VAECO Form 3043)?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. SQD
+b. EGD
+c. MCC
+90. Which APN is opened after physical receiving for rotables?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Component Inspection and Records (APN 2293)
+b. Rotables Label Booking (APN 150)
+c. Rotables Administration (APN 147)
+91. What is the proper way to stack boxes in storage?
+Reference: SOP 9.8.5.2(5-6)
+A. Heavy items on top of lighter ones
+B. Light items on top and all tags visible
+C. Random stacking is acceptable if stable
+92. Which APN changes the owner/entity of rotables?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Goods Receiving (APN 2121)
+b. Part Administration (APN 59)
+c. Rotables Administration (APN 147)
+93. Who performs "Tree-Receiving"?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Storekeeper
+b. Engineering
+c. CRS
+94. What does the blue arrow in the picture indicate? (Table SGN -> DAD)
+Reference: AMOS System Guide
+a. Part sent to DAD station
+b. Part sent from DAD station
+c. No parts sent to DAD
+95. What type of order is needed to return parts to customers?
+Reference: SOP 9.13.5.5 (Sending Unserviceable Parts Outside VAECO)
+a. LU
+b. CU
+c. PU
+96. How many material classes are there?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. 3: Rotable, Repairable Consumable, Consumable
+b. 3: Rotable, Consumable, Services
+c. 4: Rotable, Consumable, Services, Expendable
+97. Which program corrects wrong part/serial numbers for rotables?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Swap Rotables (APN 2130)
+b. Rotables Label Booking (APN 150)
+c. Rotables Administration (APN 147)
+98. What must be included when tagging a life vest during receiving?
+Reference: SOP practice for emergency items & tag 0014
+A. Add "Ref S/N" in the batch number field of Inspection Tag 0014
+B. No tag is required for consumables
+C. Use Serviceable Tag Form 0005
+99. How are materials moved between stations?
+Reference: SOP 9.10.5.4 (Transferring Parts Within VAECO)
+a. Change location in APN 293
+b. Transfer Parts in APN 293
+c. Create T-order
+100. Which APN creates locations?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Store Configuration (APN 2605)
+b. Part Tracking (APN 188)
+c. Store Management (APN 2409)
+101. What does "HANGAR" location mean for rotables?
+Reference: SOP 9.8.5.2 (Tagging, Arrangement, Preserving)
+a. Installed on aircraft
+b. In store
+c. Booked out but not installed
+102. How many statuses are there for a Picking List?
+Reference: SOP 9.10.5.2 (Parts/Materials Issuance)
+a. 2
+b. 3
+c. 4
+103. What does this symbol represent? (Home icon)
+Reference: AMOS System Guide
+a. Station
+b. Location
+c. Store
+104. What does this symbol represent? (Building icon)
+Reference: AMOS System Guide
+a. Station
+b. Location
+c. Store
+105. What does this symbol represent? (Gear icon)
+Reference: AMOS System Guide
+a. Station
+b. Location
+c. Internal Shop
+106. How many ways are there to evaluate suppliers in AMOS?
+Reference: SOP 9.11.5.2 (Evaluate Part Requests)
+a. 1
+b. 2
+c. 3
+107. Which icon represents "Partly Booked" order status?
+Reference: AMOS System Guide
+a. Booked
+b. Partly Booked
+c. Booked/open
+108. How is information entered into the remark box on VAECO Form 0005?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Booking text tab/Good Receiving 2121
+b. Remarks tab/Good Receiving 2121
+c. Header Remark box/Good Receiving 2121
+109. Which APN cancels receiving?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Cancel Receivings
+b. Cancel Pickslip
+c. Cancel Order
+110. How are expired customer spares (non-VNA) handled?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. Quarantine Store
+b. Condemn Store
+c. Return to Customer
+111. What does a green pressure gauge indicate for air cylinders?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Too much pressure
+b. Not enough pressure
+c. Enough pressure
+112. What should you do if a sub-assembly structure is not updated in the system?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Incoming normally
+b. Notify Engineering/MCC to update
+c. Refuse to accept
+113. How many tags are required for a chemical kit with 3 components?
+Reference: SOP 9.8.5.1(1c)
+A. One tag for the full kit
+B. One tag per component
+C. Tag only the main chemical
+114. How should oversized packages (e.g., APU, Radome) be unboxed?
+Reference: SOP 9.7.6.1 (Initial Classification and Assigning Receiving Area)
+a. Use hand tools
+b. Ask MSC to lower cargo lid
+c. Follow instructions on the box
+115. Where are original documents stored after receiving engines/APUs?
+Reference: SOP 9.7.7 (Archives)
+a. Store Squad library
+b. Base/Line Maintenance Center
+c. Tech Record Room, EGD
+116. Which is NOT emergency equipment?
+Reference: SOP 9.8.5.1 (Tagging)
+a. Life vest
+b. Oxygen Cylinder
+c. Ozone Converter
+117. If a certificate has "REPAIR" in the work status, what time limits must be updated in AMOS?
+Reference: SOP practice - APN 2293, based on work status
+A. Only overhaul limit
+B. Regular check
+C. All time limit needs updating
+118. Why are oxygen cylinders preserved in dark rooms?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Avoid fire and explosion
+b. Save electricity
+c. Increase tank pressure
+119. Where is the P/N and S/N located on an aircraft wheel assembly?
+Reference: Manufacturer's Documentation
+a. Tire
+b. Wheel rim
+c. Axis
+120. How is an aircraft tire classified in AMOS?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Rotable
+b. Consumable NOT repair
+c. Consumable Repairable
+121. Why should tires/wheels avoid direct sunlight?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Avoid overheating and pressure, rubber deformation
+b. Avoid corosive, flamable
+c. Avoid electrostatic sensitivity
+122. Which store needs eyewash equipment?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Engine/APU store
+b. Battery store
+c. Chemical store
+123. Can mercury thermometers be used in stores?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Yes
+b. No
+c. Only in chemical stores
+124. Can hazardous chemicals be stored with main stores?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Temporarily, with approval
+b. Yes, if fully equipped
+c. No
+125. How does a Store Keeper control expired parts/materials?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. Check Shelf Expiry list
+b. Daily check Shelf Expiry program (APN 359)
+c. Remove expired items
+126. When does FIFO not apply?
+Reference: SOP 9.10.5.2 (Parts/Materials Issuance)
+a. Issuing for HAN/HCM maintenance
+b. Transferring between stations
+c. Delivering to outstations
+127. Which is emergency equipment?
+Reference: General Knowledge
+a. Reservoir assy
+b. Fire extinguisher
+c. Steam Oven
+128. During the process of receiving 1 chemical part. On the certificate and on the label it says: Shelf life 12 months from shipping date. Date of shipment: Jul 2024. Certificate issuance date: May 2024. What is the expiration date?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 31 Aug 2025
+b. 31 Jul 2025
+c. 01 May 2024
+129. What should be done if parts are delivered without a reference to a Purchase Order?
+Reference: SOP 9.7.6.2 (Initial Receiving Check)
+a. Accept the delivery as is
+b. Reject immediately
+c. Consult Supply Squad Manager
+130. What should be checked when receiving refrigerated parts?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Label for specification, data, and time
+b. Box size
+c. Number of items
+131. What must be done if parts are received at the apron for LINE?
+Reference: SOP 9.7.6.5 (Receiving Inspection of Customer's Parts)
+a. Install without verification
+b. Verify and send documents to LGC
+c. Store temporarily
+132. What happens if a part fails receiving inspection?
+Reference: SOP 9.7.6.11 (Discrepancy Reporting)
+a. Install with a log note
+b. Return to customer
+c. Quarantine for further inspection
+133. Who should be notified if an item has less than 2/3 shelf life remaining?
+Reference: SOP 9.7.6.2 (Initial Receiving Check)
+a. Store Manager
+b. Logistics Director
+c. Supplier
+134. What must be worn when working with ESDS parts at a test bench?
+Reference: SOP 9.8.5.3 (Tagging, Arrangement, Preserving)
+a. Standard wristwatch
+b. Wrist bracelet connected to ESDS bench
+c. Safety gloves
+135. What document is tagged by Store Inspector for a serviceable engine/APU?
+Reference: SOP 9.8.5.1 (Tagging)
+a. VAECO Form 0025
+b. Identification tag
+c. Consumable release tag
+136. How soon must EGD respond to LGC after receiving a Shop Finding Report?
+Reference: SOP 9.8.5.1 (Tagging)
+a. 12 hours
+b. 24 hours
+c. 48 hours
+137. Who does Logistics Center cooperate with for engine/APU transfer?
+Reference: SOP 9.8.5.1 (Tagging)
+a. Airimex and EGD
+b. Customers and EGD
+c. Forwarders and Customers
+138. What information must be entered into AMOS?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Aircraft manufacturer/model
+b. Aircraft registration/flight hours
+c. Manufacture date, TSN, CSN, etc.
+139. Which document is NOT required for accepting an unserviceable part?
+Reference: SOP 9.13.5.2 (Receiving and Handling Unserviceable Part)
+a. ATA-300 container
+b. Customer Repair Order
+c. Safety Report
+140. What action is taken if a robbed item will not be installed?
+Reference: SOP 9.12.5.2 (Robbery of an Item from Serviceable Assembly) and SOP 9.7
+a. Transfer to Store location (APN 293)
+b. Follow SOP 9.10
+c. Perform SOP 9.7 Incoming Inspection
+141. What does SI do after incoming inspection of an engine?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Prepare for shipping
+b. Coordinates authorized staff to perform an inventory of parts
+c. Initiate maintenance schedule
+142. Where is VAECO Form 3043 kept after completion?
+Reference: SOP 9.7.7 (Archives)
+a. With the engine
+b. With maintenance logs
+c. In inventory database
+143. What should be done if technical documents are missing for an engine stand?
+Reference: SOP 9.7.6.3 (Incoming Inspection of Part/Materials)
+a. Store without action
+b. Notify MSC
+c. Inform VNA to request documents
+144. During the process of receiving 1 consumable part. On the certificate and on the label it says: - Shelflife: 5 years from manufacture date - Date of shipment: Jul 2024 MFG date: 20 Mar 2024. What is the expiration date?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 31 Jul 2029
+b. 20 Mar 2029
+c. 31 Mar 2029
+145. During the process of receiving 1 chemical part kit (part A & part B). On the label of part A, it's shelflife information is: "Exp: 05/2026". And part B, it is "Exp: 03/2026". What is the expiration date of the chemical part kit?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 31 Mar 2026
+b. 01 Mar 2027
+c. 31 May 2026
+146. When incoming 1 consumable part. On the certificate and on the label it says: - Shelflife: 2 years from manufacture date - Certificate issuance date: 19/Dec/2024 - MFG date: 12/Apr/2024. The shelf life is extended for 6 months. This is approved by the manufacturer. What is the expiration date?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 12 Apr 2027
+b. 12 Oct 2026
+c. 19 Dec 2026
+147. When incoming 1 component rotable part. At block Remark on the airworthiness certificate, it says: "the next check period: after 5 years". Certificate issuance date is 01/Jun/2024. Store receiving date is 24/Jun/2024. What is the shelflife date?
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 01 Jun 2030
+b. 01 Jun 2029
+c. 24 Jul 2029
+148. When incoming 1 oxygen cylinder with 1 repair order from VSTEA shop. On the certificate, it says: "Next weight check: 1year". Certificate issuance date: 14/Feb/2024. Store receiving date is 15/ Jun/2024. Enter the date at block (5) Perf. Date of form 0014 inspection tag
+Reference: SOP 9.9.5.1 (Control of Shelf-Life Aircraft Parts)
+a. 14 Feb 2024
+b. 15 Feb 2025
+c. 14 Feb 2025
+149. When incoming 1 oxygen cylinder with 1 repair order from VSTEA shop. At block Status/Work of the certificate, it says: "OVERHAULED". Enter at block (3) Work type of form 0014 inspection tag?
+Reference: SOP 9.8.5.1 (Tagging)
+a. Inspect and test
+b. New
+c. Overhaul
+150. When incoming 1 component rotable part. At block Remark of the certificate, it says: "MFG date: 26/08/2017. Time since new: 7983.51 hours. Cycle since new: 3126.00". Enter at block 8. (TSN) of INSTALLATION/SERVICEABLE TAG (left hand part) form 0005
+Reference: SOP 9.8.5.1 (Tagging)
+a. 26/08/2017
+b. 7983.51
+с. 3126.00
+    </script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // Key đáp án cho 150 câu PDF
+        const bank2Answers = [
+            1, 2, 2, 2, 1, 0, 2, 0, 0, 2, 1, 1, 0, 0, 2, 1, 0, 1, 2, 1, 
+            2, 0, 2, 2, 1, 1, 0, 1, 1, 0, 2, 2, 2, 2, 1, 2, 2, 0, 2, 1, 
+            0, 1, 0, 2, 2, 2, 0, 2, 2, 2, 2, 1, 1, 0, 1, 1, 0, 0, 0, 1, 
+            0, 0, 1, 2, 0, 2, 1, 1, 2, 1, 1, 0, 1, 1, 0, 1, 1, 2, 1, 0, 
+            2, 1, 1, 0, 0, 2, 0, 2, 1, 0, 1, 2, 0, 1, 1, 0, 0, 0, 1, 0, 
+            2, 2, 0, 1, 2, 1, 1, 2, 0, 2, 2, 1, 0, 1, 2, 2, 2, 0, 1, 2, 
+            0, 2, 1, 2, 1, 0, 1, 1, 2, 0, 1, 2, 1, 1, 0, 1, 2, 2, 0, 2,
+            1, 2, 1, 1, 0, 1, 1, 2, 2, 1
+        ];
+
+        // Giải thích cho phần PDF (Mẫu chung cho các câu suy luận hoặc có ghi chú)
+        const generateRationale = (ref) => {
+            if(!ref) return "Không có trích dẫn cụ thể. Áp dụng các nguyên tắc cơ bản trong hàng không.";
+            if(ref.includes("9.14")) return "Khu vực Condemn (hủy) yêu cầu quy trình tách biệt nghiêm ngặt để tránh đưa vật tư hỏng vào sử dụng lại.";
+            if(ref.includes("9.8.5.3") || ref.toLowerCase().includes("esds")) return "Các linh kiện ESDS rất nhạy cảm với tĩnh điện, bắt buộc phải dùng túi chống tĩnh điện, thảm nối đất và kiểm tra thiết bị bảo hộ trước khi thao tác.";
+            if(ref.includes("9.9.5.1") || ref.toLowerCase().includes("shelf")) return "Hạn sử dụng (Shelf-life) và thời hạn bảo dưỡng phải được giám sát chặt chẽ, tuân thủ dữ liệu từ nhà sản xuất (OEM).";
+            if(ref.includes("9.7.6.3")) return "Quá trình Incoming Inspection (kiểm tra nhập kho) nhằm đảm bảo vật tư đúng chủng loại, đúng chứng chỉ và tình trạng vật lý hoàn hảo trước khi nhập hệ thống (AMOS).";
+            return "Theo quy định được nêu rõ trong " + ref;
+        };
+
+        const parseBank1 = (rawText) => {
+            const qs = [];
+            const blocks = rawText.split(/\n(?=\d+\.\s)/);
+            for (let block of blocks) {
+                block = block.replace(/\[Page \d+\]/g, '').trim();
+                if (!block) continue;
+                
+                const lines = block.split('\n');
+                let curQ = { id: '', question: '', options: [], correct: 0, ref: '', rationale: '' };
+                let isOpt = false;
+                
+                for (let line of lines) {
+                    line = line.trim();
+                    if(!line) continue;
+                    
+                    if (line.match(/^(\d+)\.\s+/)) {
+                        curQ.id = line.match(/^(\d+)/)[1];
+                        curQ.question = line.replace(/^\d+\.\s+/, '');
+                    } else if (line.match(/^\*[a-e]\.\s/i)) {
+                        isOpt = true;
+                        curQ.correct = curQ.options.length;
+                        curQ.options.push(line.replace(/^\*[a-e]\.\s/i, '').trim());
+                    } else if (line.match(/^[a-e]\.\s/i)) {
+                        isOpt = true;
+                        curQ.options.push(line.replace(/^[a-e]\.\s/i, '').trim());
+                    } else if (line.startsWith('Ref.:') || line.startsWith('Ref:')) {
+                        curQ.ref = line.replace(/^Ref\.:?\s*/i, '').trim();
+                    } else {
+                        if(isOpt) curQ.options[curQ.options.length-1] += ' ' + line;
+                        else curQ.question += ' ' + line;
+                    }
+                }
+                curQ.rationale = "Tham chiếu trực tiếp từ " + (curQ.ref || "Tài liệu VAECO SOP/MOE");
+                if(curQ.options.length > 0) qs.push(curQ);
+            }
+            return qs;
+        };
+
+        const parseBank2 = (rawText) => {
+            const qs = [];
+            const blocks = rawText.split(/\n(?=\d+\.\s)/);
+            let index = 0;
+
+            for (let block of blocks) {
+                block = block.replace(/\[Page \d+\]/g, '').trim();
+                if (!block) continue;
+                
+                const lines = block.split('\n');
+                let curQ = { 
+                    id: '', question: '', options: [], 
+                    correct: bank2Answers[index] !== undefined ? bank2Answers[index] : 0, 
+                    ref: '', rationale: '' 
+                };
+                let optMode = false;
+                
+                for (let line of lines) {
+                    line = line.trim();
+                    if(!line) continue;
+                    
+                    if (line.match(/^(\d+)\.\s+/)) {
+                        curQ.id = "PDF-" + line.match(/^(\d+)/)[1];
+                        curQ.question = line.replace(/^\d+\.\s+/, '');
+                    } else if (line.match(/^Reference:\s*/i)) {
+                        curQ.ref = line.replace(/^Reference:\s*/i, '').trim();
+                    } else if (line.match(/^[a-eA-EсС]\.\s/)) { // handle cyrillic 'c' bug in OCR
+                        optMode = true;
+                        curQ.options.push(line.replace(/^[a-eA-EсС]\.\s/, '').trim());
+                    } else {
+                        if (optMode) curQ.options[curQ.options.length - 1] += ' ' + line;
+                        else curQ.question += ' ' + line;
+                    }
+                }
+                if(curQ.options.length > 0) {
+                    curQ.rationale = generateRationale(curQ.ref);
+                    qs.push(curQ);
+                    index++;
+                }
+            }
+            return qs;
+        };
+
+        function App() {
+            const [mode, setMode] = useState('MENU'); // MENU, PRACTICE, EXAM, EXAM_RESULTS, SEARCH
+            const [allQuestions, setAllQuestions] = useState([]);
+            const [activeQuestions, setActiveQuestions] = useState([]);
+            const [currentQ, setCurrentQ] = useState(0);
+            const [wrongAnswers, setWrongAnswers] = useState([]);
+            // Search State
+            const [searchTerm, setSearchTerm] = useState("");
+
+            // Practice State
+            const [score, setScore] = useState(0);
+            const [selectedOption, setSelectedOption] = useState(null);
+            const [isAnswered, setIsAnswered] = useState(false);
+
+            // Exam State
+            const [examAnswers, setExamAnswers] = useState({});
+            const [examScore, setExamScore] = useState(0);
+
+            useEffect(() => {
+                const b1Text = document.getElementById('bank1-data').textContent;
+                const b2Text = document.getElementById('bank2-data').textContent;
+                
+                const q1 = parseBank1(b1Text);
+                const q2 = parseBank2(b2Text);
+                
+                setAllQuestions([...q1, ...q2]);
+            }, []);
+
+            const startPractice = () => {
+    // Tạo một bản sao của mảng câu hỏi và xáo trộn ngẫu nhiên
+            const shuffledQuestions = [...allQuestions].sort(() => 0.5 - Math.random());
+    
+                setActiveQuestions(shuffledQuestions);
+                setCurrentQ(0); 
+                setScore(0); 
+                setSelectedOption(null); 
+                setIsAnswered(false);
+                setMode('PRACTICE');
+                };
+
+            const startExam = () => {
+                const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+                setActiveQuestions(shuffled.slice(0, 30));
+                setCurrentQ(0); setExamAnswers({}); setExamScore(0);
+                setMode('EXAM');
+            };
+
+            const startSearch = () => {
+                setSearchTerm("");
+                setMode('SEARCH');
+            };
+
+            const backToMenu = () => setMode('MENU');
+
+            const handleAnswerSelect = (optIndex) => {
+                if (mode === 'PRACTICE') {
+                    if (isAnswered) return;
+                    setSelectedOption(optIndex);
+                    setIsAnswered(true);
+                    // CHÈN THÊM ĐOẠN NÀY VÀO:
+                    if (optIndex !== activeQuestions[currentQ].correct) {
+                         setWrongAnswers(prev => [...new Set([...prev, currentQ])]);
+                    }
+                    // Kết thúc đoạn chèn
+                    if (optIndex === activeQuestions[currentQ].correct) setScore(score + 1);
+                } else if (mode === 'EXAM') {
+                    setExamAnswers({ ...examAnswers, [currentQ]: optIndex });
+                }
+            };
+
+            const nextPracticeQuestion = () => {
+                if (currentQ + 1 < activeQuestions.length) {
+                    setCurrentQ(currentQ + 1);
+                    setSelectedOption(null);
+                    setIsAnswered(false);
+                } else {
+                    setMode('EXAM_RESULTS');
+                }
+            };
+
+            const submitExam = () => {
+                let finalScore = 0;
+                activeQuestions.forEach((q, idx) => {
+                    if (examAnswers[idx] === q.correct) finalScore++;
+                });
+                setExamScore(finalScore);
+                setMode('EXAM_RESULTS');
+            };
+
+            // SEARCH FILTER
+            const filteredQuestions = useMemo(() => {
+                if(!searchTerm) return allQuestions;
+                const lower = searchTerm.toLowerCase();
+                return allQuestions.filter(q => 
+                    q.question.toLowerCase().includes(lower) || 
+                    (q.ref && q.ref.toLowerCase().includes(lower)) ||
+                    q.id.toString().toLowerCase().includes(lower) ||
+                    q.options.some(opt => opt.toLowerCase().includes(lower))
+                );
+            }, [searchTerm, allQuestions]);
+
+            if (allQuestions.length === 0) return <div className="min-h-screen flex items-center justify-center text-blue-400 font-bold">Đang tải dữ liệu...</div>
+
+            if (mode === 'MENU') {
+                return (
+                    <div className="min-h-screen flex items-center justify-center p-4 fade-in">
+                        <div className="max-w-xl w-full bg-gray-800 rounded-2xl shadow-2xl border border-gray-700 overflow-hidden">
+                            <div className="bg-gray-900 p-8 text-center border-b border-gray-700">
+                                <h1 className="text-3xl font-extrabold text-blue-400 mb-2 tracking-tight">VAECO Store Inspector</h1>
+                                <p className="text-gray-400 font-medium">Ngân hàng {allQuestions.length} câu hỏi • Dark Mode</p>
+                            </div>
+                            <div className="p-8 space-y-4">
+                                <button onClick={startSearch} className="w-full flex items-center p-5 bg-gray-700/50 hover:bg-gray-700 border border-gray-600 hover:border-gray-400 rounded-xl transition-all group">
+                                    <div className="text-3xl mr-4 group-hover:scale-110 transition-transform">🔍</div>
+                                    <div className="text-left">
+                                        <h3 className="text-lg font-bold text-gray-100">Tra cứu & Tìm kiếm</h3>
+                                        <p className="text-sm text-gray-400 mt-1">Tìm nhanh câu hỏi, xem đáp án và giải thích.</p>
+                                    </div>
+                                </button>
+                                
+                                <button onClick={startPractice} className="w-full flex items-center p-5 bg-blue-900/20 hover:bg-blue-900/40 border border-blue-900/50 hover:border-blue-500 rounded-xl transition-all group">
+                                    <div className="text-3xl mr-4 group-hover:scale-110 transition-transform">📚</div>
+                                    <div className="text-left">
+                                        <h3 className="text-lg font-bold text-blue-400">Chế độ Ôn tập</h3>
+                                        <p className="text-sm text-gray-400 mt-1">Làm toàn bộ {allQuestions.length} câu. Hiển thị đáp án tức thì.</p>
+                                    </div>
+                                </button>
+
+                                <button onClick={startExam} className="w-full flex items-center p-5 bg-emerald-900/20 hover:bg-emerald-900/40 border border-emerald-900/50 hover:border-emerald-500 rounded-xl transition-all group">
+                                    <div className="text-3xl mr-4 group-hover:scale-110 transition-transform">⏱️</div>
+                                    <div className="text-left">
+                                        <h3 className="text-lg font-bold text-emerald-400">Chế độ Thi thử</h3>
+                                        <p className="text-sm text-gray-400 mt-1">Rút ngẫu nhiên 20 câu. Chấm điểm sau khi nộp bài.</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            if (mode === 'SEARCH') {
+                return (
+                    <div className="max-w-4xl mx-auto mt-6 mb-12 p-4 fade-in">
+                        <div className="sticky top-4 z-10 flex gap-4 bg-gray-800 p-4 rounded-xl shadow-lg border border-gray-700 mb-6">
+                            <button onClick={backToMenu} className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg font-medium hover:bg-gray-600 transition">← Back</button>
+                            <input 
+                                type="text" 
+                                placeholder="Nhập từ khóa, mã câu hỏi, Ref..." 
+                                value={searchTerm}
+                                onChange={e => setSearchTerm(e.target.value)}
+                                className="flex-1 bg-gray-900 border border-gray-600 text-gray-100 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 transition-colors"
+                            />
+                        </div>
+                        <div className="text-gray-400 mb-4 text-sm font-medium">Tìm thấy {filteredQuestions.length} câu hỏi khớp.</div>
+                        <div className="space-y-6">
+                            {filteredQuestions.map((q, idx) => (
+                                <div key={idx} className="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-sm">
+                                    <h3 className="text-lg font-bold text-gray-100 mb-4">
+                                        <span className="text-blue-500 mr-2">Câu {q.id}.</span> {q.question}
+                                    </h3>
+                                    <div className="space-y-2">
+                                        {q.options.map((opt, oIdx) => (
+                                            <div key={oIdx} className={`p-3 rounded-lg border ${oIdx === q.correct ? 'bg-emerald-900/30 border-emerald-500 text-emerald-200 font-medium' : 'bg-gray-900/50 border-gray-700 text-gray-400'}`}>
+                                                {String.fromCharCode(65 + oIdx)}. {opt}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="mt-4 p-4 bg-gray-900/60 border-l-4 border-amber-500 rounded-r-lg">
+                                        <div className="text-sm text-gray-300"><span className="font-bold text-amber-500 uppercase tracking-wider text-xs mr-2">💡 Giải thích:</span> {q.rationale}</div>
+                                        {q.ref && <div className="mt-2 text-xs text-gray-500 font-mono">Ref: {q.ref}</div>}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )
+            }
+
+            if (mode === 'EXAM_RESULTS') {
+                const totalQuestions = activeQuestions.length;
+                const finalScore = mode === 'PRACTICE' ? score : examScore;
+                const percent = Math.round((finalScore / totalQuestions) * 100);
+
+                return (
+                    <div className="max-w-4xl mx-auto mt-8 mb-12 p-4 fade-in">
+                        <div className="bg-gray-800 p-8 rounded-2xl shadow-xl text-center mb-8 border border-gray-700 border-t-8 border-t-blue-500">
+                            <h1 className="text-3xl font-extrabold text-gray-100 mb-2">Kết quả bài làm</h1>
+                            <p className="text-6xl font-black text-blue-500 my-6">{finalScore} <span className="text-3xl text-gray-600">/ {totalQuestions}</span></p>
+                            <p className="text-lg text-gray-400 mb-8 font-medium">Tỷ lệ chính xác: <span className="text-blue-400 font-bold">{percent}%</span></p>
+                            <button onClick={backToMenu} className="bg-blue-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-500 transition shadow-lg">Về màn hình chính</button>
+                        </div>
+
+                        {mode === 'EXAM' && (
+                            <div className="space-y-6">
+                                <h2 className="text-2xl font-bold text-gray-200 mb-6">Chi tiết Bài thi:</h2>
+                                {activeQuestions.map((q, qIdx) => {
+                                    const userAns = examAnswers[qIdx];
+                                    const isCorrect = userAns === q.correct;
+                                    
+                                    return (
+                                        <div key={qIdx} className={`bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-sm border-l-4 ${isCorrect ? 'border-l-emerald-500' : 'border-l-red-500'}`}>
+                                            <div className="flex justify-between items-start mb-4 gap-4">
+                                                <h3 className="text-lg font-semibold text-gray-100">
+                                                    <span className="text-gray-500 mr-2 text-sm font-mono">#{qIdx + 1} ({q.id})</span> {q.question}
+                                                </h3>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold shrink-0 ${isCorrect ? 'bg-emerald-900/50 text-emerald-400 border border-emerald-500/50' : 'bg-red-900/50 text-red-400 border border-red-500/50'}`}>
+                                                    {isCorrect ? 'ĐÚNG' : 'SAI'}
+                                                </span>
+                                            </div>
+                                            
+                                            <div className="space-y-2 mb-4">
+                                                {q.options.map((opt, oIdx) => {
+                                                    let bgClass = "bg-gray-900/50 border-gray-700 text-gray-400";
+                                                    if (oIdx === q.correct) bgClass = "bg-emerald-900/30 border-emerald-500 text-emerald-200 font-medium";
+                                                    else if (oIdx === userAns && !isCorrect) bgClass = "bg-red-900/30 border-red-500 text-red-200 line-through opacity-80";
+
+                                                    return (
+                                                        <div key={oIdx} className={`p-3 rounded-lg border ${bgClass}`}>
+                                                            {String.fromCharCode(65 + oIdx)}. {opt}
+                                                        </div>
+                                                    )
+                                                })}
+                                            </div>
+
+                                            <div className="mt-4 p-4 bg-gray-900/60 border-l-4 border-amber-500 rounded-r-lg">
+                                                <div className="text-sm text-gray-300"><span className="font-bold text-amber-500 uppercase tracking-wider text-xs mr-2">💡 Giải thích:</span> {q.rationale}</div>
+                                                {q.ref && <div className="mt-2 text-xs text-gray-500 font-mono">Ref: {q.ref}</div>}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </div>
+                );
+            }
+
+            const q = activeQuestions[currentQ];
+            
+            return (
+                <div className="max-w-6xl mx-auto mt-6 mb-12 p-4 fade-in">
+                    <div className="flex justify-between items-center bg-gray-800 p-4 rounded-xl border border-gray-700 mb-6 shadow-sm">
+                        <button onClick={backToMenu} className="text-gray-400 hover:text-gray-100 flex items-center font-medium transition text-sm px-2">
+                            <span className="mr-2">←</span> Thoát
+                        </button>
+                        <div className="text-lg font-bold text-gray-200 hidden md:block">
+                            {mode === 'PRACTICE' ? 'Chế độ Ôn tập' : 'Chế độ Thi thử'}
+                        </div>
+                        <div className="bg-gray-900 border border-gray-700 text-blue-400 text-sm font-bold px-4 py-1.5 rounded-lg tracking-widest">
+                            {currentQ + 1} / {activeQuestions.length}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row gap-6">
+                        {/* Khu vực Câu hỏi */}
+                        <div className="flex-1 bg-gray-800 p-6 lg:p-8 rounded-2xl border border-gray-700 shadow-sm relative">
+                            <h2 className="text-xl font-bold text-gray-100 mb-8 leading-relaxed">
+                                <span className="text-blue-500 mr-2">Câu {currentQ + 1} <span className="text-sm font-normal text-gray-500 font-mono">({q.id})</span>.</span> 
+                                {q.question}
+                            </h2>
+                            
+                            <div className="space-y-4">
+                                {q.options.map((opt, idx) => {
+                                    let btnClass = "border-gray-600 bg-gray-900/50 hover:border-gray-400 text-gray-300";
+                                    let badgeClass = "bg-gray-700 text-gray-300";
+                                    
+                                    if (mode === 'PRACTICE') {
+                                        if (isAnswered) {
+                                            if (idx === q.correct) {
+                                                btnClass = "border-emerald-500 bg-emerald-900/20 text-emerald-100";
+                                                badgeClass = "bg-emerald-500 text-white";
+                                            } else if (idx === selectedOption) {
+                                                btnClass = "border-red-500 bg-red-900/20 text-red-100";
+                                                badgeClass = "bg-red-500 text-white";
+                                            }
+                                        }
+                                    } else if (mode === 'EXAM') {
+                                        if (examAnswers[currentQ] === idx) {
+                                            btnClass = "border-blue-500 bg-blue-900/20 text-blue-100 ring-1 ring-blue-500";
+                                            badgeClass = "bg-blue-500 text-white";
+                                        }
+                                    }
+
+                                    return (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleAnswerSelect(idx)}
+                                            disabled={mode === 'PRACTICE' && isAnswered}
+                                            className={`w-full text-left p-4 rounded-xl border transition-all duration-200 ${btnClass} ${(!isAnswered || mode === 'EXAM') ? 'active:scale-[0.99]' : 'cursor-default'}`}
+                                        >
+                                            <div className="flex items-center">
+                                                <span className={`w-8 h-8 shrink-0 flex items-center justify-center rounded-lg mr-4 text-sm font-bold transition-colors ${badgeClass}`}>
+                                                    {String.fromCharCode(65 + idx)}
+                                                </span>
+                                                <span className="font-medium text-base leading-snug">{opt}</span>
+                                            </div>
+                                        </button>
+                                    )
+                                })}
+                            </div>
+
+                            {/* Giải thích (Chỉ cho Practice) */}
+                            {mode === 'PRACTICE' && isAnswered && (
+                                <div className="mt-8 p-5 bg-gray-900/80 rounded-xl border-l-4 border-amber-500 fade-in">
+                                    <h3 className="text-xs font-bold text-amber-500 mb-2 uppercase tracking-wider">💡 Ghi chú & Giải thích:</h3>
+                                    <p className="text-gray-300 text-sm mb-2 leading-relaxed">{q.rationale}</p>
+                                    {q.ref && <p className="text-xs font-mono text-gray-500">Ref: {q.ref}</p>}
+                                </div>
+                            )}
+
+                            {/* Điều hướng dưới Câu hỏi */}
+                            <div className="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center">
+                                <button 
+                                    onClick={() => setCurrentQ(Math.max(0, currentQ - 1))}
+                                    disabled={currentQ === 0}
+                                    className={`px-6 py-2.5 rounded-lg font-medium transition-all ${currentQ === 0 ? 'bg-gray-900 text-gray-600 cursor-not-allowed' : 'bg-gray-700 text-gray-200 hover:bg-gray-600'}`}
+                                >
+                                    Trở lại
+                                </button>
+                                
+                                {mode === 'PRACTICE' ? (
+                                    <div className="ml-auto w-full md:w-auto">
+                                        {isAnswered && (
+                                            <button 
+                                                onClick={nextPracticeQuestion}
+                                                className="w-full bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold hover:bg-blue-500 transition-all shadow-lg"
+                                            >
+                                                {currentQ + 1 === activeQuestions.length ? "Xem kết quả" : "Câu tiếp theo →"}
+                                            </button>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="ml-auto">
+                                        {currentQ + 1 === activeQuestions.length ? (
+                                            <button 
+                                                onClick={submitExam}
+                                                className="bg-emerald-600 text-white px-8 py-2.5 rounded-lg font-bold hover:bg-emerald-500 transition-all shadow-lg"
+                                            >
+                                                Nộp bài thi
+                                            </button>
+                                        ) : (
+                                            <button 
+                                                onClick={() => setCurrentQ(Math.min(activeQuestions.length - 1, currentQ + 1))}
+                                                className="bg-blue-600 text-white px-8 py-2.5 rounded-lg font-bold hover:bg-blue-500 transition-all shadow-lg"
+                                            >
+                                                Câu tiếp theo →
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Thanh điều hướng nhanh Panel phải */}
+                        <div className="w-full lg:w-72 shrink-0 bg-gray-800 p-6 rounded-2xl border border-gray-700 shadow-sm h-fit max-h-[85vh] overflow-y-auto">
+                            <h3 className="font-bold text-gray-300 mb-4 text-center text-sm uppercase tracking-widest">Danh sách câu hỏi</h3>
+                            <div className="grid grid-cols-5 gap-2">
+                                {activeQuestions.map((_, idx) => {
+                                    const isCurrent = currentQ === idx;
+                                    let btnStatusClass = "bg-gray-900 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-gray-200";
+                                    // CHÈN LOGIC MÀU ĐỎ:
+                                    if (wrongAnswers.includes(idx)) {
+                                        btnStatusClass = "bg-red-900/50 border-red-500 text-red-300";
+                                    } else if (mode === 'EXAM') {
+                                        if (examAnswers[idx] !== undefined) btnStatusClass = "bg-blue-900/50 border-blue-500/50 text-blue-300";
+                                    } else {
+                                        if (idx < currentQ || (idx === currentQ && isAnswered)) btnStatusClass = "bg-emerald-900/50 border-emerald-500/50 text-emerald-300";
+                                    }
+
+                                    return (
+                                        <button
+                                            key={idx}
+                                            onClick={() => {
+                                                if(mode==='PRACTICE') {
+                                                    setCurrentQ(idx);
+                                                    setIsAnswered(true); 
+                                                    if(idx >= currentQ && !isAnswered) setIsAnswered(false); 
+                                                } else {
+                                                    setCurrentQ(idx);
+                                                }
+                                            }}
+                                            className={`h-10 rounded-lg border text-sm font-semibold transition-all flex items-center justify-center ${
+                                                isCurrent ? 'ring-2 ring-white ring-offset-2 ring-offset-gray-800' : ''
+                                            } ${btnStatusClass}`}
+                                        >
+                                            {idx + 1}
+                                        </button>
+                                    )
+                                })}
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {wrongAnswers.length > 0 && (
+            <button onClick={() => {
+                setActiveQuestions(activeQuestions.filter((_, idx) => wrongAnswers.includes(idx)));
+                setCurrentQ(0);
+                setMode('PRACTICE');
+                setWrongAnswers([]); // Reset danh sách sai sau khi ôn lại
+            }} className="mt-4 bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-bold">
+                Xem lại {wrongAnswers.length} câu sai
+            </button>
+                    )}
+                </div>
+            );
+        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
